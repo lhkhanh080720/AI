@@ -22,9 +22,9 @@ def PLA(data):
 	W = np.zeros(len(X[0]))
 	for i in range(400):
 		for i in range(len(X)):
-			if data['Class'][i] == 'green' and (W @ np.array(X[i])) < 0:
+			if data['Class'][i] == 1 and (W @ np.array(X[i])) < 0:
 				W += X[i]
-			if data['Class'][i] == 'red' and (W @ np.array(X[i])) >= 0:
+			if data['Class'][i] == 0 and (W @ np.array(X[i])) >= 0:
 				W -= X[i]
 	print("W =", W)
 	sampleX = np.linspace(min(data['X1']) - 3, max(data['X1']) + 3, int((max(data['X1']) - min(data['X1']))*100))
