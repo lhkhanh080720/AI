@@ -1,12 +1,12 @@
-#SVM, soft margin SVM, kernel SVM
+#hard margin SVM, soft margin SVM, kernel SVM
 import numpy as np 
 import matplotlib.pyplot as plt
 from sklearn.datasets._samples_generator import make_blobs
+from sklearn.svm import SVC
 
-#init datapoints
-def initData(): 
-    #cluster_std: do lech chuan
-    X, y = make_blobs(n_samples=150, centers=2, cluster_std=0.5, random_state=0)
+def initData(samples = 100, cluster = 0.5):
+    #init datapoints
+    X, y = make_blobs(n_samples=samples, centers=2, cluster_std=cluster, random_state=0)
     
     for i, val in enumerate(X):
         if y[i]:
@@ -17,13 +17,15 @@ def initData():
     plt.xlabel('X0')
     plt.ylabel('X1')
     plt.show()
-    
+
     return (X, y)
 
-#SVM:
-def SVM(X, y):
-    from sklearn.svm import SVC
-    model = SVC(kernel='linear')                        # Create hyperplane: linear
+#hard and soft margin SVM
+def SVM(X, y, type = None, C = None):
+    if type == 'hard':                                  #hard margin SVM
+        model = SVC(kernel='linear')                    # Create hyperplane: linear
+    elif type == 'soft':                                #soft margin SVM 
+        model = SVC(kernel='linear', C = C)             # Create hyperplane: linear
     model.fit(X, y)                                     # Train data
     w = model.coef_[0]             
     a = -w[0]/w[1]
@@ -61,6 +63,41 @@ def SVM(X, y):
     ax.axis("equal")
     plt.show()
 
+def processImage():
+    #Load Image
+    img = plt.imread('image.png')
+    plt.imshow(img)
+    plt.show()
+    
+    #Sample Selection
+    samp = [img[260:285, 164:189], img[2:27, 2:27]]
+    for i in range(2):
+        plt.subplot(1, 2, i+1)
+        plt.imshow(samp[i])
+        if i:
+            plt.gca().set_title('Water')
+        else:
+            plt.gca().set_title('Soil')
+    plt.show()
+
+    #
+    data = []
+    target = []
+    for i in range(2):
+        for j in range(25):
+            for k in range(25):
+                data += [samp[i][j][k]]
+                target += [i]
+    print(target)
+
+target_names = ['highland', 'plains', 'water']
+
 if __name__ == '__main__':
-    (X, y) = initData()
-    SVM(X, y)
+    # input = input("Input = ")
+    # if input == 'hard':
+    #     (X, y) = initData(150, 0.5)
+    #     SVM(X, y, type='hard')
+    # elif input == 'soft':
+    #     (X, y) = initData(90, 1)
+    #     SVM(X, y, type='soft', C=55)
+    processImage()
